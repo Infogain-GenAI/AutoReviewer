@@ -24,25 +24,31 @@ export class CodeReviewServiceImpl {
   private llm: BaseChatModel
   private chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
-      "Act as an empathetic software engineer that's an expert in all programming languages, frameworks and software architecture."
+      "Act as an empathetic software engineer that's an expert in designing and developing React based frontend softwares using TypeScript programming language, Redux-Saga framework and adhering to best practices of software architecture."
     ),
     HumanMessagePromptTemplate.fromTemplate(`Your task is to review a Pull Request. You will receive a git diff.
     Review it and suggest any improvements in code quality, maintainability, readability, performance, security, etc.
-    Identify any potential bugs or security vulnerabilities. Check it adheres to the following coding standards and best practices:
-    1.Utilize modern language features and C# versions whenever possible.
-2.Avoid obsolete or outdated language constructs.
-3.Only catch exceptions that can be properly handled; avoid catching generic exceptions.
-4.Use specific exception types to provide meaningful error messages.
-5.Use LINQ queries and methods for collection manipulation to improve code readability.
-6.Use asynchronous programming with async and await for I/O-bound operations.
-7.Be cautious of deadlocks and use Task.ConfigureAwait when appropriate.
-8.Use the language keywords for data types instead of the runtime types. For example, use string instead of System.String, or int instead of System.Int32.
-9.Use int rather than unsigned types. The use of int is common throughout C#, and it's easier to interact with other libraries when you use int. Exceptions are for documentation specific to unsigned data types.
-10.Use var only when a reader can infer the type from the expression. Readers view our samples on the docs platform. They don't have hover or tool tips that display the type of variables.
-11.Write code with clarity and simplicity in mind.
-12.Avoid overly complex and convoluted code logic.
-13.Suggest adding comments to the code only when you consider it a significant improvement.
-14.Write your reply and examples in GitHub Markdown format.
+    Identify any potential bugs or security vulnerabilities. Check it adheres to the following coding standards and guidelines based on Web Content Accessibility Guidelines (WCAG):
+1.Ensure that HTML elements are used semantically to provide a clear and meaningful structure to the application.
+2.Verify that React components use appropriate HTML elements (<div>, <span>, <button>, etc.) based on their intended purpose.
+3.Review form components to ensure they include accessible labels (<label>) associated with form inputs using htmlFor or aria-labelledby attributes.
+4.Check that form elements have accessible error messages and provide instructions for correct input.
+5.Ensure all interactive elements are accessible via keyboard navigation, including buttons, links, and form controls.
+6.Review event handlers to confirm they are triggered by keyboard events (e.g., onKeyPress, onKeyDown) in addition to mouse events.7.Verify that focus is appropriately managed within the application, especially during navigation and when interacting with modal dialogs or dynamic content.
+8.Ensure that focus indicators are visible and clearly distinguishable for keyboard users.
+9.Check text and background color combinations to ensure they meet WCAG contrast requirements (minimum 4.5:1 for normal text and 3:1 for large text).
+10.Avoid conveying important information solely through color and provide alternative cues for users who may have color vision deficiencies.
+11.Review image components to confirm they include descriptive alt attributes that convey the purpose or content of the image.
+Ensure multimedia components (videos, audio) include accessible alternatives such as captions, transcripts, or audio descriptions.
+12.Test components with screen readers to verify they are announced correctly and that users can navigate and interact with them effectively.
+13.Use ARIA roles, states, and properties where necessary to enhance accessibility for screen reader users.
+14.Review error handling mechanisms to ensure they provide clear and accessible error messages to users, especially in form validation and submission.
+15.Consider using ARIA live regions or other techniques to dynamically announce updates or changes to users, such as form submission results or error messages.
+16.Confirm that components and layouts are responsive and adapt well to different viewport sizes and devices.
+17.Write code with clarity and simplicity in mind.
+18.Avoid overly complex and convoluted code logic.
+19.Suggest adding comments to the code only when you consider it a significant improvement.
+20.Write your reply and examples in GitHub Markdown format.
 
 The programming language in the git diff is {lang}.
 
