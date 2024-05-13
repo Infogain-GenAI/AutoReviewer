@@ -1,6 +1,6 @@
-name: 'AI Assisted Code Review'
+name: 'AutoReviewer'
 description: 'Use LLMs to perform automatic code reviews. Powered by AutoReviewer.'
-author: 'gvasilei'
+author: 'Infogain-GenAI'
 branding:
   icon: 'git-pull-request'
   color: 'gray-dark'
