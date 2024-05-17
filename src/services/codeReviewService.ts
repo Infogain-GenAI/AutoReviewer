@@ -48,8 +48,8 @@ export class CodeReviewServiceImpl {
 17.Container components connect to Redux store and pass data to presentational components via props.
 18.Keep components small, focused, and reusable.
 19.Write code with clarity and simplicity in mind.
-20.Avoid overly complex and convoluted code logic.
-21.Suggest adding comments to the code only when you consider it a significant improvement.
+20.Suggest adding comments to the code only when you consider it a significant improvement.
+21.Avoid overly complex and convoluted code logic.
 22.Write your reply and examples in GitHub Markdown format.
 
 The programming language in the git diff is {lang}.
