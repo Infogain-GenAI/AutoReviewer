@@ -29,29 +29,47 @@ export class CodeReviewServiceImpl {
     HumanMessagePromptTemplate.fromTemplate(`Your task is to review a Pull Request. You will receive a git diff.
     Review it and suggest any improvements in code quality, maintainability, readability, performance, security, etc.
     Identify any potential bugs or security vulnerabilities. Check it adheres to the following coding standards and guidelines:
-1.Ensure that HTML elements are used semantically to provide a clear and meaningful structure to the application.
-2.Verify that React components use appropriate HTML elements (<div>, <span>, <button>, etc.) based on their intended purpose.
-3.Review form components to ensure they include accessible labels (<label>) associated with form inputs using htmlFor or aria-labelledby attributes.
-4.Follow a consistent naming convention, such as camelCase or PascalCase, throughout the codebase.
-5.Define actions and action types in separate files for better organization and maintainability.
-6.Group related actions and action types together.
-7.Use action creators to encapsulate action creation logic.
-8.Create separate Reducer Functions for each slice of state.
-9.Utilize Redux Middleware for tasks such as logging, crash reporting, or async actions.
-10.Keep middleware logic separate from component logic to maintain separation of concerns.
-11.Document middleware usage and purpose for clarity.
-12.Organize sagas in a dedicated directory.
-13.Define Sagas for handling asynchronous logic such as API calls and side effects.
-14.Use takeEvery, takeLatest, takeLeading, or other Saga effects to manage different scenarios of action handling.
-15.Keep Sagas lean and focused on a single task.
-16.Follow the container/presentational component pattern for separating UI logic from data logic.
-17.Container components connect to Redux store and pass data to presentational components via props.
-18.Keep components small, focused, and reusable.
-19.Write code with clarity and simplicity in mind.
-20.Suggest adding comments to the code only when you consider it a significant improvement.
-21.Avoid overly complex and convoluted code logic.
-22.Write your reply and examples in GitHub Markdown format.
+    1. Redux Setup:
+    a.Check that Redux is set up correctly with reducers, actions, and the store.
+    b.Verify that action types are defined as constants and are consistent across the application.
+    c.Ensure that action creators are used to encapsulate action logic and avoid direct manipulation of action objects.
+    2. Redux Middleware:
+    a.Review the usage of Redux Middleware for tasks such as logging, error handling, or asynchronous operations.
+    b.Ensure that middleware functions are pure and do not cause side effects unrelated to Redux state management.
+    c.Check for proper error handling in middleware to prevent application crashes and provide meaningful error messages to users.
+    3. Saga Implementation:
+    a.Evaluate the usage of Redux Saga for handling asynchronous logic and side effects.
+    b.Verify that sagas are structured appropriately, with clear separation of concerns and minimal coupling between sagas.
+    c.Check for proper error handling in sagas, including handling of failed API requests and other asynchronous operations.
+    4.Component Architecture:
+    a.Review the component architecture to ensure adherence to best practices and maintainability.
+    b.Check for proper separation of container and presentational components, with container components responsible for connecting to Redux and managing state.
+    c.Ensure that components are reusable, composable, and focused on a single responsibility.
+    5.State Management:
+    a.Evaluate the usage of Redux for state management, considering factors such as the size and complexity of the application.
+    b.Check for appropriate normalization of state, especially for nested or relational data structures.
+    c.Verify that selectors are used to derive derived data from the Redux store efficiently.
+    6.Code Organization and Structure:
+    a.Check that the project structure follows best practices and is organized logically.
+    b.Ensure that files and folders are named descriptively and consistently.
+    c.Verify that code is modular and follows the single responsibility principle, with each module responsible for a specific feature or functionality.
+    7.Error Handling:
+    a.Evaluate error handling mechanisms throughout the codebase, including in Redux actions, reducers, middleware, and sagas.
+    b.Check for consistent error handling patterns and ensure that errors are handled gracefully to prevent application crashes and provide a good user experience.
+    8.Performance Optimization:
+    a. Review code for potential performance bottlenecks and inefficiencies.
+    b. Check for unnecessary re-renders in React components and identify opportunities for optimization using techniques such as memoization and PureComponent.
+    c. Evaluate the usage of Redux selectors and memoization to improve performance when accessing derived data from the store.
+    9.Testing:
+    a.Verify that the codebase is adequately covered by unit tests, integration tests, and end-to-end tests.
+    b.Check for proper mocking of external dependencies, such as APIs and services, in tests to ensure isolation and reproducibility.
+    c.Evaluate test coverage and identify areas where additional tests are needed to improve code quality and reliability.
+    10.Documentation and Comments:
+    a.Ensure that code is well-documented with comments, especially for complex logic or algorithms.
+    b.Check that documentation is up-to-date and accurately reflects the behavior and usage of functions, components, and modules.
+    c.Encourage the use of README files and other documentation to provide an overview of the project structure, architecture, and development workflow.
 
+Write your reply and examples in GitHub Markdown format.
 The programming language in the git diff is {lang}.
 
     git diff to review
