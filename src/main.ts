@@ -18,14 +18,17 @@ export const run = async (): Promise<void> => {
   const githubToken = core.getInput('github_token')
   const modelName = core.getInput('model_name')
   const temperature = parseInt(core.getInput('model_temperature'))
-
+  const azureopenAIApiKey = core.getInput('azure_openai_api_key')
   const context = github.context
   const { owner, repo } = context.repo
 
   const model: BaseChatModel = new ChatOpenAI({
     temperature,
-    openAIApiKey,
-    modelName
+    //openAIApiKey,
+    //modelName,
+    azureOpenAIApiKey: azureopenAIApiKey,
+    azureOpenAIApiInstanceName: 'devassist',
+    azureOpenAIApiDeploymentName: 'devassist'
   })
 
   const MainLive = initializeServices(model, githubToken)
