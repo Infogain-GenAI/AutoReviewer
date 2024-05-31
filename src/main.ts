@@ -10,6 +10,7 @@ import { PullRequestService, PullRequestServiceImpl, octokitTag } from './servic
 import { LanguageDetectionService } from './services/languageDetectionService'
 
 import { Effect, Layer, Match, pipe, Exit } from 'effect'
+import 'dotenv/config'
 
 config()
 
@@ -18,7 +19,7 @@ export const run = async (): Promise<void> => {
   const githubToken = core.getInput('github_token')
   const modelName = core.getInput('model_name')
   const temperature = parseInt(core.getInput('model_temperature'))
-  const azureopenAIApiKey = core.getInput('azure_openai_api_key')
+  //const azureopenAIApiKey = core.getInput('azure_openai_api_key')
 
   const context = github.context
   const { owner, repo } = context.repo
@@ -27,10 +28,10 @@ export const run = async (): Promise<void> => {
     temperature,
     //openAIApiKey,
     //modelName,
-    azureOpenAIApiKey: azureopenAIApiKey,
-    azureOpenAIApiInstanceName: 'devassist',
-    azureOpenAIApiDeploymentName: 'devassist',
-    azureOpenAIApiVersion: 'v1'
+    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
+    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
+    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
+    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION
   })
 
   const MainLive = initializeServices(model, githubToken)
