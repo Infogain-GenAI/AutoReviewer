@@ -10,7 +10,6 @@ import { PullRequestService, PullRequestServiceImpl, octokitTag } from './servic
 import { LanguageDetectionService } from './services/languageDetectionService'
 
 import { Effect, Layer, Match, pipe, Exit } from 'effect'
-import 'dotenv/config'
 
 config()
 
