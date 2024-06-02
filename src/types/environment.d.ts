@@ -1,7 +1,7 @@
 export {}
 
 declare global {
-  namespace NodeJS {
+  module NodeJS {
     interface ProcessEnv {
       AZURE_OPENAI_API_KEY: string
       AZURE_OPENAI_API_INSTANCE_NAME: string
