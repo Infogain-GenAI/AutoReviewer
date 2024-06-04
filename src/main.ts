@@ -4,7 +4,7 @@ import * as github from '@actions/github'
 import type { PullRequestEvent } from '@octokit/webhooks-definitions/schema'
 
 import { ChatOpenAI } from 'langchain/chat_models/openai'
-import { BaseChatModel } from 'langchain/dist/chat_models/base'
+import { BaseChatModel } from 'langchain/chat_models/base'
 import { CodeReviewService, CodeReviewServiceImpl } from './services/codeReviewService'
 import { PullRequestService, PullRequestServiceImpl, octokitTag } from './services/pullRequestService'
 import { LanguageDetectionService } from './services/languageDetectionService'
@@ -27,10 +27,10 @@ export const run = async (): Promise<void> => {
     temperature,
     //openAIApiKey,
     //modelName,
-    azureOpenAIApiKey: '488c2153b83a4570bc81243613b9f9e0',
-    azureOpenAIApiInstanceName: 'devassist',
-    azureOpenAIApiDeploymentName: 'devassist',
-    azureOpenAIApiVersion: 'v1'
+    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
+    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
+    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
+    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION
   })
 
   const MainLive = initializeServices(model, githubToken)
