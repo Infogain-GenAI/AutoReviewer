@@ -1,3 +1,5 @@
+export {}
+
 declare namespace NodeJS {
   export interface ProcessEnv {
     AZURE_OPENAI_API_KEY: string
