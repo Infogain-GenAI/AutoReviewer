@@ -18,7 +18,10 @@ export const run = async (): Promise<void> => {
   const githubToken = core.getInput('github_token')
   const modelName = core.getInput('model_name')
   const temperature = parseInt(core.getInput('model_temperature'))
-  //const azureopenAIApiKey = core.getInput('azure_openai_api_key')
+  const azureOpenAIApiKey = core.getInput('azure_openai_api_key')
+  const azureOpenAIApiInstanceName = core.getInput('azure_openai_api_instance_name')
+  const azureOpenAIApiDeploymentName = core.getInput('azure_openai_api_deployment_name')
+  const azureOpenAIApiVersion = core.getInput('azure_openai_api_version')
 
   const context = github.context
   const { owner, repo } = context.repo
@@ -27,10 +30,10 @@ export const run = async (): Promise<void> => {
     temperature,
     //openAIApiKey,
     //modelName,
-    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
-    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
-    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
-    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION
+    azureOpenAIApiKey,
+    azureOpenAIApiInstanceName,
+    azureOpenAIApiDeploymentName,
+    azureOpenAIApiVersion
   })
 
   const MainLive = initializeServices(model, githubToken)
