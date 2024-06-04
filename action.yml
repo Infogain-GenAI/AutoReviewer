@@ -24,13 +24,13 @@ inputs:
   azure_openai_api_key:
     description: 'Azure OpenAI API key'
     required: true
-azure_openai_api_instance_name:
+  azure_openai_api_instance_name:
     description: 'Azure OpenAI API Instance Name'
     required: true
-azure_openai_api_deployment_name:
+  azure_openai_api_deployment_name:
     description: 'Azure OpenAI API Deployment Name'
     required: true
-azure_openai_api_version:
+  azure_openai_api_version:
     description: 'Azure OpenAI API Version'
     required: true
 
