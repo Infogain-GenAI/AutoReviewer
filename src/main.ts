@@ -27,10 +27,10 @@ export const run = async (): Promise<void> => {
     temperature,
     //openAIApiKey,
     //modelName,
-    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
-    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
-    azureOpenAIApiDeploymentName: process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
-    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION
+    azureOpenAIApiKey: '488c2153b83a4570bc81243613b9f9e0',
+    azureOpenAIApiInstanceName: 'devassist',
+    azureOpenAIApiDeploymentName: 'devassist',
+    azureOpenAIApiVersion: 'v1'
   })
 
   const MainLive = initializeServices(model, githubToken)
