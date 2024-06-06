@@ -1,11 +1,14 @@
 # 🤖 Automated Code Reviews powered by ChatGPT 🤖
 
-A GitHub action uses OpenAI's GPT-4 to perform automated code reviews. When you create a PR, our action will automatically review the code and suggest changes, just like a human code reviewer would.
+A GitHub action uses Azure OpenAI with GPT-4o model to perform automated code reviews. When you create a PR, our action will automatically review the code and suggest changes, just like a human code reviewer would.
 
 ## 🚀 How to use it
 
-- Get an API Key from [OpenAI](https://platform.openai.com/account/api-keys)
-- Add it as a GitHub secret
+- Get an Azure OpenAI API Key
+- Get the Instance name of Azure OpenAI
+- Deploy the model in Azure OpenAI Studio and get the deployment name
+- Get the API version
+- Add the above four variables as GitHub secrets
 - Setup an action that runs on every PR
 
 ```YAML
