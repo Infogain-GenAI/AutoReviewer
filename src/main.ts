@@ -23,6 +23,11 @@ export const run = async (): Promise<void> => {
   const azureOpenAIApiDeploymentName = core.getInput('azure_openai_api_deployment_name')
   const azureOpenAIApiVersion = core.getInput('azure_openai_api_version')
 
+  // const azureOpenAIApiKey = ''
+  // const azureOpenAIApiInstanceName = 'devassist'
+  // const azureOpenAIApiDeploymentName = 'devassist'
+  // const azureOpenAIApiVersion = '2024-05-01-preview'
+
   const context = github.context
   const { owner, repo } = context.repo
 
@@ -57,29 +62,36 @@ export const run = async (): Promise<void> => {
         )
       )
 
-      const a = excludeFilePatterns.pipe(
-        Effect.flatMap(filePattens =>
-          PullRequestService.pipe(
-            Effect.flatMap(pullRequestService =>
-              pullRequestService.getFilesForReview(owner, repo, context.payload.number, filePattens)
-            ),
-            Effect.flatMap(files => Effect.sync(() => files.filter(file => file.patch !== undefined))),
-            Effect.flatMap(files =>
-              Effect.forEach(files, file =>
-                CodeReviewService.pipe(
-                  Effect.flatMap(codeReviewService => codeReviewService.codeReviewFor(file)),
-                  Effect.flatMap(res =>
-                    PullRequestService.pipe(
-                      Effect.flatMap(pullRequestService =>
-                        pullRequestService.createReviewComment({
-                          repo,
-                          owner,
-                          pull_number: context.payload.number,
-                          commit_id: context.payload.pull_request?.head.sha,
-                          path: file.filename,
-                          body: res.text,
-                          subject_type: 'file'
-                        })
+      const a = PullRequestService.pipe(
+        Effect.flatMap(pullRequestService =>
+          pullRequestService.getPullRequestDescription(owner, repo, context.payload.number)
+        ),
+        Effect.flatMap(preqDescription =>
+          excludeFilePatterns.pipe(
+            Effect.flatMap(filePattens =>
+              PullRequestService.pipe(
+                Effect.flatMap(pullRequestService =>
+                  pullRequestService.getFilesForReview(owner, repo, context.payload.number, filePattens)
+                ),
+                Effect.flatMap(files => Effect.sync(() => files.filter(file => file.patch !== undefined))),
+                Effect.flatMap(files =>
+                  Effect.forEach(files, file =>
+                    CodeReviewService.pipe(
+                      Effect.flatMap(codeReviewService => codeReviewService.codeReviewFor(file, preqDescription)),
+                      Effect.flatMap(res =>
+                        PullRequestService.pipe(
+                          Effect.flatMap(pullRequestService =>
+                            pullRequestService.createReviewComment({
+                              repo,
+                              owner,
+                              pull_number: context.payload.number,
+                              commit_id: context.payload.pull_request?.head.sha,
+                              path: file.filename,
+                              body: res.text,
+                              subject_type: 'file'
+                            })
+                          )
+                        )
                       )
                     )
                   )
@@ -89,7 +101,6 @@ export const run = async (): Promise<void> => {
           )
         )
       )
-
       return a
     }),
 

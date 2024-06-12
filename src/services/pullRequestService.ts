@@ -2,10 +2,10 @@ import { GitHub } from '@actions/github/lib/utils'
 import type { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types'
 import { minimatch } from 'minimatch'
 import * as core from '@actions/core'
-import { ArrElement } from '../typeUtils'
+import { ArrElement, pullRequestDescription } from '../typeUtils'
 import { exponentialBackoffWithJitter } from '../httpUtils'
 import { Effect, Context } from 'effect'
-import { UnknownException } from 'effect/Cause'
+import { NoSuchElementException, UnknownException } from 'effect/Cause'
 
 export type PullRequestFileResponse = RestEndpointMethodTypes['pulls']['listFiles']['response']
 
@@ -13,6 +13,8 @@ export type PullRequestFile = ArrElement<PullRequestFileResponse['data']>
 type CreateReviewCommentRequest = RestEndpointMethodTypes['pulls']['createReviewComment']['parameters']
 
 type CreateReviewRequest = RestEndpointMethodTypes['pulls']['createReview']['parameters']
+
+export type prDescription = pullRequestDescription
 
 export interface PullRequestService {
   getFilesForReview: (
@@ -25,6 +27,13 @@ export interface PullRequestService {
     requestOptions: CreateReviewCommentRequest
   ) => Effect.Effect<void, unknown, InstanceType<typeof GitHub>>
   createReview: (requestOptions: CreateReviewRequest) => Effect.Effect<void, unknown, InstanceType<typeof GitHub>>
+  /// start: getPullRequestDescription
+  getPullRequestDescription: (
+    owner: string,
+    repo: string,
+    pull_number: number
+  ) => Effect.Effect<prDescription, UnknownException, InstanceType<typeof GitHub>>
+  /// end: getPullRequestDescription
 }
 
 export const octokitTag = Context.GenericTag<InstanceType<typeof GitHub>>('octokit')
@@ -95,4 +104,24 @@ export class PullRequestServiceImpl {
         )
       )
     )
+
+  /// start: getPullRequestDescription
+  getPullRequestDescription = (
+    owner: string,
+    repo: string,
+    pull_number: number
+  ): Effect.Effect<prDescription, UnknownException, InstanceType<typeof GitHub>> => {
+    const description = octokitTag.pipe(
+      Effect.flatMap(octokit =>
+        Effect.retry(
+          Effect.tryPromise(() => octokit.rest.pulls.get({ owner, repo, pull_number })).pipe(
+            Effect.map(response => response.data.body)
+          ),
+          exponentialBackoffWithJitter(3)
+        )
+      )
+    )
+    return description
+    /// end: getPullRequestDescription
+  }
 }
