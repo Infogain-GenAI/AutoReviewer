@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "ts-node",
+        "type": "node",
+        "request": "launch",
+        "args": ["./src/main.ts"],
+        "runtimeArgs": ["-r", "ts-node/register"],
+        "cwd": "${workspaceRoot}",
+        "internalConsoleOptions": "openOnSessionStart",
+        "env": {
+          "INPUT_github_token": "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",
+          "GITHUB_REPOSITORY": "Infogain-GenAI/redux-saga-example",
+        }
+      }
+    ]
+  }

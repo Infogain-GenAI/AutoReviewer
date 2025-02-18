@@ -33,6 +33,9 @@ inputs:
   azure_openai_api_version:
     description: 'Azure OpenAI API Version'
     required: true
+  pr_number:
+    description: 'Pull Request Number'
+    required: true
 
 runs:
   using: 'node20'

@@ -44,13 +44,15 @@ export const run = async (): Promise<void> => {
   const MainLive = initializeServices(model, githubToken)
 
   const program = Match.value(context.eventName).pipe(
-    Match.when('pull_request', () => {
+    Match.when('workflow_dispatch', () => {
+      const prNumber = parseInt(core.getInput('pr_number'))
+
       const excludeFilePatterns = pipe(
         Effect.sync(() => github.context.payload as PullRequestEvent),
         Effect.tap(pullRequestPayload =>
           Effect.sync(() => {
             core.info(
-              `repoName: ${repo} pull_number: ${context.payload.number} owner: ${owner} sha: ${pullRequestPayload.pull_request.head.sha}`
+              `repoName: ${repo} pull_number: ${prNumber} owner: ${owner} sha: ${pullRequestPayload.pull_request.head.sha}`
             )
           })
         ),
