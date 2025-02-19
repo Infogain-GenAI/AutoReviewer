@@ -52,7 +52,7 @@ export const run = async (): Promise<void> => {
         Effect.tap(pullRequestPayload =>
           Effect.sync(() => {
             core.info(
-              `repoName: ${repo} pull_number: ${prNumber} owner: ${owner} sha: ${pullRequestPayload.pull_request.head.sha}`
+              `repoName: ${repo} pull_number: ${prNumber} owner: ${owner} `
             )
           })
         ),
