@@ -87,7 +87,7 @@ export const run = async (): Promise<void> => {
                               repo,
                               owner,
                               pull_number: prNumber,
-                              commit_id: context.payload.pull_request?.head.sha,
+                              commit_id: context.payload.pull_request?.head.sha || context.sha,
                               path: file.filename,
                               body: res.text,
                               subject_type: 'file'
