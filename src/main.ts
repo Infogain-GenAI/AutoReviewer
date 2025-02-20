@@ -66,14 +66,14 @@ export const run = async (): Promise<void> => {
 
       const a = PullRequestService.pipe(
         Effect.flatMap(pullRequestService =>
-          pullRequestService.getPullRequestDescription(owner, repo, context.payload.number)
+          pullRequestService.getPullRequestDescription(owner, repo, prNumber)
         ),
         Effect.flatMap(preqDescription =>
           excludeFilePatterns.pipe(
             Effect.flatMap(filePattens =>
               PullRequestService.pipe(
                 Effect.flatMap(pullRequestService =>
-                  pullRequestService.getFilesForReview(owner, repo, context.payload.number, filePattens)
+                  pullRequestService.getFilesForReview(owner, repo, prNumber, filePattens)
                 ),
                 Effect.flatMap(files => Effect.sync(() => files.filter(file => file.patch !== undefined))),
                 Effect.flatMap(files =>
@@ -86,7 +86,7 @@ export const run = async (): Promise<void> => {
                             pullRequestService.createReviewComment({
                               repo,
                               owner,
-                              pull_number: context.payload.number,
+                              pull_number: prNumber,
                               commit_id: context.payload.pull_request?.head.sha,
                               path: file.filename,
                               body: res.text,
