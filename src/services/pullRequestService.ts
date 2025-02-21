@@ -115,7 +115,7 @@ export class PullRequestServiceImpl {
       Effect.flatMap(octokit =>
         Effect.retry(
           Effect.tryPromise(() => octokit.rest.pulls.get({ owner, repo, pull_number })).pipe(
-            Effect.map(response => response.data.body)
+            Effect.map(response => response.data.merge_commit_sha)
           ),
           exponentialBackoffWithJitter(3)
         )
