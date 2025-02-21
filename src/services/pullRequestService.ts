@@ -86,13 +86,29 @@ export class PullRequestServiceImpl {
     requestOptions: CreateReviewCommentRequest
   ): Effect.Effect<void, Error, InstanceType<typeof GitHub>> =>
     octokitTag.pipe(
-      Effect.tap(_ => core.debug(`Creating review comment: ${JSON.stringify(requestOptions)}`)),
       Effect.flatMap(octokit =>
         Effect.retry(
-          Effect.tryPromise(() => octokit.rest.pulls.createReviewComment(requestOptions)),
+          Effect.tryPromise(() =>
+            octokit.rest.pulls.get({
+              owner: requestOptions.owner,
+              repo: requestOptions.repo,
+              pull_number: requestOptions.pull_number
+            })
+          ).pipe(
+            Effect.flatMap(response => {
+              const commitSha = response.data.head.sha;
+              const updatedRequestOptions = {
+                ...requestOptions,
+                commit_id: commitSha,
+                end_commit_oid: commitSha
+              };
+              return Effect.tryPromise(() => octokit.rest.pulls.createReviewComment(updatedRequestOptions));
+            })
+          ),
           exponentialBackoffWithJitter(3)
         )
-      )
+      ),
+      Effect.tap(_ => core.debug(`Creating review comment: ${JSON.stringify(requestOptions)}`))
     )
 
   createReview = (requestOptions: CreateReviewRequest): Effect.Effect<void, Error, InstanceType<typeof GitHub>> =>
