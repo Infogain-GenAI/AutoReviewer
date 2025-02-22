@@ -2,7 +2,7 @@ import { GitHub } from '@actions/github/lib/utils'
 import type { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types'
 import { minimatch } from 'minimatch'
 import * as core from '@actions/core'
-import { ArrElement, pullRequestDescription } from '../typeUtils'
+import { ArrElement, pullRequestCommitId } from '../typeUtils'
 import { exponentialBackoffWithJitter } from '../httpUtils'
 import { Effect, Context } from 'effect'
 import { NoSuchElementException, UnknownException } from 'effect/Cause'
@@ -14,7 +14,7 @@ type CreateReviewCommentRequest = RestEndpointMethodTypes['pulls']['createReview
 
 type CreateReviewRequest = RestEndpointMethodTypes['pulls']['createReview']['parameters']
 
-export type prDescription = pullRequestDescription
+export type prCommitId = pullRequestCommitId
 
 export interface PullRequestService {
   getFilesForReview: (
@@ -27,13 +27,13 @@ export interface PullRequestService {
     requestOptions: CreateReviewCommentRequest
   ) => Effect.Effect<void, unknown, InstanceType<typeof GitHub>>
   createReview: (requestOptions: CreateReviewRequest) => Effect.Effect<void, unknown, InstanceType<typeof GitHub>>
-  /// start: getPullRequestDescription
-  getPullRequestDescription: (
+  /// start: getPullRequestCommitId
+  getPullRequestCommitId: (
     owner: string,
     repo: string,
     pull_number: number
-  ) => Effect.Effect<prDescription, UnknownException, InstanceType<typeof GitHub>>
-  /// end: getPullRequestDescription
+  ) => Effect.Effect<prCommitId, UnknownException, InstanceType<typeof GitHub>>
+  /// end: getPullRequestCommitId
 }
 
 export const octokitTag = Context.GenericTag<InstanceType<typeof GitHub>>('octokit')
@@ -121,23 +121,23 @@ export class PullRequestServiceImpl {
       )
     )
 
-  /// start: getPullRequestDescription
-  getPullRequestDescription = (
+  /// start: getPullRequestCommitId
+  getPullRequestCommitId = (
     owner: string,
     repo: string,
     pull_number: number
-  ): Effect.Effect<prDescription, UnknownException, InstanceType<typeof GitHub>> => {
-    const description = octokitTag.pipe(
+  ): Effect.Effect<prCommitId, UnknownException, InstanceType<typeof GitHub>> => {
+    const commitid = octokitTag.pipe(
       Effect.flatMap(octokit =>
         Effect.retry(
           Effect.tryPromise(() => octokit.rest.pulls.get({ owner, repo, pull_number })).pipe(
-            Effect.map(response => response.data.merge_commit_sha)
+            Effect.map(response => response.data.head.sha)
           ),
           exponentialBackoffWithJitter(3)
         )
       )
     )
-    return description
-    /// end: getPullRequestDescription
+    return commitid
+    /// end: getPullRequestCommitId
   }
 }

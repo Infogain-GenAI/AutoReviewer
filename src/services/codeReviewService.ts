@@ -8,12 +8,10 @@ import { LanguageDetectionService } from './languageDetectionService'
 import { exponentialBackoffWithJitter } from '../httpUtils'
 import { Effect, Context } from 'effect'
 import { NoSuchElementException, UnknownException } from 'effect/Cause'
-import { pullRequestDescription } from '../typeUtils'
 
 export interface CodeReviewService {
   codeReviewFor(
-    file: PullRequestFile,
-    prDescription: pullRequestDescription
+    file: PullRequestFile
   ): Effect.Effect<ChainValues, NoSuchElementException | UnknownException, LanguageDetectionService>
   codeReviewForChunks(
     file: PullRequestFile
@@ -26,17 +24,14 @@ export class CodeReviewServiceImpl {
   private llm: BaseChatModel
   private chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
-      `Act as an empathetic software engineer that's an expert in designing and developing React based frontend softwares based on Redux Middleware and Saga framework, while strictly following best practices of software architecture.
-      Beyond expertise in software development, you also demonstrate a thorough understanding of project dynamics and a keen grasp of any business requirements associated with it. Furthermore, you can easily showcase adeptness in translating these business needs into well-structured codebases, always upholding coding and software architecture best practices.`
+      `Act as an empathetic software engineer that's an expert in designing and developing React based frontend softwares based on Redux Middleware and Saga framework, while strictly following best practices of software architecture`
     ),
     HumanMessagePromptTemplate.fromTemplate(`Your task is to review a Pull Request.
-    Your task is to review a Pull Request for both functional and technical inconsistencies.
-    You will receive a git diff. Your task involves identifying and highlighting any code issues such as missing requirements, bugs, security vulnerabilities, or lapses in code quality concerning functional requirements.
-    Additionally, you're expected to conduct a technical review to suggest enhancements in various aspects such as code quality, maintainability, readability, performance, and security.
+    Your task is to review a Pull Request for technical inconsistencies.
+    You will receive a git diff. You're expected to conduct a technical review to suggest enhancements in various aspects such as code quality, maintainability, readability, performance, and security.
     This includes identifying potential bugs or security vulnerabilities.
-    For Functional reviews, specifications will be provided in the form of a User Story.
     For technical reviews, instructions will be outlined in the form of coding standards and guidelines for React, Redux and Saga.
-    Ensure adherence to both functional specifications and technical coding standards and guidelines.
+    Ensure adherence to technical coding standards and guidelines.
     -Technical Coding Standards and Guidelines for Redux, React, and Saga are as below:
     1. Redux Setup:
     a.Check that Redux is set up correctly with reducers, actions, and the store.
@@ -77,8 +72,6 @@ export class CodeReviewServiceImpl {
     a.Ensure that code is well-documented with comments, especially for complex logic or algorithms.
     b.Check that documentation is up-to-date and accurately reflects the behavior and usage of functions, components, and modules.
     c.Encourage the use of README files and other documentation to provide an overview of the project structure, architecture, and development workflow.
--Functional Specifications:
-The functional specifications for review are detailed in the given User Story are as follows: {prDescription}.
 
 Write your reply and examples in GitHub Markdown format.
 The programming language in the git diff is {lang}.
@@ -113,14 +106,13 @@ The programming language in the git diff is {lang}.
 
   ///start changed - codeReviewFor
   codeReviewFor = (
-    file: PullRequestFile,
-    prDescription: pullRequestDescription
+    file: PullRequestFile
   ): Effect.Effect<ChainValues, NoSuchElementException | UnknownException, LanguageDetectionService> =>
     LanguageDetectionService.pipe(
       Effect.flatMap(languageDetectionService => languageDetectionService.detectLanguage(file.filename)),
       Effect.flatMap(lang =>
         Effect.retry(
-          Effect.tryPromise(() => this.chain.call({ lang, diff: file.patch, prDescription })),
+          Effect.tryPromise(() => this.chain.call({ lang, diff: file.patch })),
           exponentialBackoffWithJitter(3)
         )
       )

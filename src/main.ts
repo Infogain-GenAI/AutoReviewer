@@ -66,9 +66,9 @@ export const run = async (): Promise<void> => {
 
       const a = PullRequestService.pipe(
         Effect.flatMap(pullRequestService =>
-          pullRequestService.getPullRequestDescription(owner, repo, prNumber)
+          pullRequestService.getPullRequestCommitId(owner, repo, prNumber)
         ),
-        Effect.flatMap(preqDescription =>
+        Effect.flatMap(preqCommitId =>
           excludeFilePatterns.pipe(
             Effect.flatMap(filePattens =>
               PullRequestService.pipe(
@@ -79,7 +79,7 @@ export const run = async (): Promise<void> => {
                 Effect.flatMap(files =>
                   Effect.forEach(files, file =>
                     CodeReviewService.pipe(
-                      Effect.flatMap(codeReviewService => codeReviewService.codeReviewFor(file, preqDescription)),
+                      Effect.flatMap(codeReviewService => codeReviewService.codeReviewFor(file)),
                       Effect.flatMap(res =>
                         PullRequestService.pipe(
                           Effect.flatMap(pullRequestService =>
@@ -87,7 +87,7 @@ export const run = async (): Promise<void> => {
                               repo,
                               owner,
                               pull_number: prNumber,
-                              commit_id: context.payload.pull_request?.head.sha,
+                              commit_id: preqCommitId as string,
                               path: file.filename,
                               body: res.text,
                               subject_type: 'file'

@@ -3,4 +3,4 @@
  */
 export type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[] ? ElementType : never
 
-export type pullRequestDescription = string | null
+export type pullRequestCommitId = string | null
