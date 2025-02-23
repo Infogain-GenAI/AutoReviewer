@@ -83,7 +83,10 @@ export const run = async (): Promise<void> => {
                               commit_id: preqCommitId as string,
                               path: file.filename,
                               body: res.text,
-                              line: 1 // Assuming line 1 for simplicity; adjust as needed
+                              start_line: 1, // Assuming line 1 for simplicity; adjust as needed
+                              start_side: 'RIGHT',
+                              line: 2,
+                              side: 'RIGHT',
                             })
                           )
                         )
