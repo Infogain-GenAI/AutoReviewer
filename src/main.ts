@@ -108,7 +108,7 @@ export const run = async (): Promise<void> => {
 
     Match.orElse(eventName =>
       Effect.sync(() => {
-        core.setFailed(`This action only works on pull_request events. Got: ${eventName}`)
+        core.setFailed(`This action only works on pull_request or workflow_dispatch events. Got: ${eventName}`)
       })
     )
   )
