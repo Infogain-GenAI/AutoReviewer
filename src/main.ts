@@ -23,18 +23,11 @@ export const run = async (): Promise<void> => {
   const azureOpenAIApiDeploymentName = core.getInput('azure_openai_api_deployment_name')
   const azureOpenAIApiVersion = core.getInput('azure_openai_api_version')
 
-  // const azureOpenAIApiKey = ''
-  // const azureOpenAIApiInstanceName = 'devassist'
-  // const azureOpenAIApiDeploymentName = 'devassist'
-  // const azureOpenAIApiVersion = '2024-05-01-preview'
-
   const context = github.context
   const { owner, repo } = context.repo
 
   const model: BaseChatModel = new ChatOpenAI({
     temperature,
-    //openAIApiKey,
-    //modelName,
     azureOpenAIApiKey,
     azureOpenAIApiInstanceName,
     azureOpenAIApiDeploymentName,
@@ -90,7 +83,7 @@ export const run = async (): Promise<void> => {
                               commit_id: preqCommitId as string,
                               path: file.filename,
                               body: res.text,
-                              subject_type: 'file'
+                              line: 1 // Assuming line 1 for simplicity; adjust as needed
                             })
                           )
                         )
